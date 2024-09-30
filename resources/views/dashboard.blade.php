@@ -27,6 +27,11 @@
                             <h3 class="font-semibold text-lg">Feature 3</h3>
                             <p class="mt-2">Learn about feature 3 and how it can transform your workflow.</p>
                         </div>
+                        @foreach ($links as $link)
+                        <li>{{$link->title}}</li>
+                        @endforeach
+                        {{$links->links()}}
+                        <small>Contributed by: {{$link->creator->name}} {{$link->updated_at->diffForHumans()}}</small>
                     </div>
                 </div>
             </div>
