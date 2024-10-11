@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth;
 use App\Models\CommunityLink;
 use Illuminate\Http\Request;
 use App\Models\Channel;
