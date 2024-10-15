@@ -1,14 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <nav class="bg-gray-800 dark:bg-gray-900 p-4 flex items-center">
+        <nav class="bg-gray-800 dark:bg-gray-900 p-4 flex items-center shadow-md">
             <h2 class="font-semibold text-xl text-white leading-tight">
                 {{ __('Community Contributions') }}
             </h2>
         </nav>
     </x-slot>
-    <x-community-add-link :channels="$channels" />
-    <x-community-links :links="$links" />
-
+    
+    <div class="p-6">
+        <x-community-add-link :channels="$channels" />
+        <x-community-links :links="$links" />
+    </div>
 
     <!-- Footer -->
     <footer class="bg-gray-800 dark:bg-gray-900 p-4 mt-8">
