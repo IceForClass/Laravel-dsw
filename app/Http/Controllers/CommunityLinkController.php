@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CommunityLink;
 use Illuminate\Http\Request;
 use App\Models\Channel;
+use App\Http\Requests\CommunityLinkForm;
 
 class CommunityLinkController extends Controller
 {
@@ -29,22 +30,21 @@ class CommunityLinkController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request)
-{
+    public function store(CommunityLinkForm $request)
+    {
     // Validar la entrada
-    $data = $request->validate([
-        'title' => 'required|max:255',
-        'link' => 'required|unique:community_links|url|max:255',
-        'channel_id' => 'required|exists:channels,id',
-    ]);
+    $data = $request->validated();
 
     $link = new CommunityLink($data);
     $link -> user_id = Auth::id();
     $link->approved = Auth::user()->trusted ?? false;
     $link ->save();
+    if (!Auth::user()->trusted) {
+        return back()->with('status', 'Your link is under review for approval.');
+    }
     return back();
 
-}
+    }
 
 
     /**
