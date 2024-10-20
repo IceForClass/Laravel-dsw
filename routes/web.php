@@ -19,6 +19,11 @@ Route::get('/contact', function () {
     return view('welcome');
 })->middleware(['auth', 'verified'])->name('contact');
 
+Route::get('/myLinks', [CommunityLinkController::class, 'myLinks'])
+    ->middleware(['auth', 'verified'])
+    ->name('myLinks');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

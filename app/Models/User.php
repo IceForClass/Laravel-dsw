@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany; // Importa HasMany
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -43,5 +44,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relación uno a muchos: Un usuario puede tener muchos CommunityLinks.
+     */
+    public function myLinks(): HasMany
+    {
+        return $this->hasMany(CommunityLink::class, 'user_id'); // Asegúrate de que 'user_id' sea el campo correcto
     }
 }
