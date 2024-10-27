@@ -9,7 +9,9 @@
     
     <div class="p-6">
         <x-community-add-link :channels="$channels" />
+        <x-alert_user_status/>
         <x-community-links :links="$links" />
+        
     </div>
 
     <!-- Footer -->

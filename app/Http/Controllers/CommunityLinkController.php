@@ -14,7 +14,7 @@ class CommunityLinkController extends Controller
      * Display a listing of the resource.
      */
     public function index() {
-        $links = CommunityLink::where('approved', 1)->paginate(25);
+        $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(10);
         $channels = Channel::orderBy('title','asc')->get();
         return view('dashboard', compact('links',  'channels'));
       }
@@ -42,16 +42,22 @@ class CommunityLinkController extends Controller
     {
     // Validar la entrada
     $data = $request->validated();
-
     $link = new CommunityLink($data);
-    $link -> user_id = Auth::id();
-    $link->approved = Auth::user()->trusted ?? false;
-    $link ->save();
-    if (!Auth::user()->trusted) {
-        return back()->with('status', 'Your link is under review for approval.');
+    $existing = $link->hasAlreadyBeenSubmitted();
+        
+    if (!$existing) {
+        $link->user_id = Auth::id();
+        $link->approved = Auth::user()->trusted ?? false;
+        
+        $link->save();
+
+        if (!Auth::user()->trusted) {
+            return back()->with('status', 'Your link is under review for approval.');
+        }
+
+        
     }
     return back();
-
     }
 
 

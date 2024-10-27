@@ -53,4 +53,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(CommunityLink::class, 'user_id'); // Asegúrate de que 'user_id' sea el campo correcto
     }
+
+    public function isTrusted()
+    {
+        return $this->trusted;
+    }
 }

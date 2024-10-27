@@ -1,7 +1,5 @@
 @props(['links'])
 
-<x-alert_user_status/>
-
 <div class="py-12 bg-gray-100 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg transition-transform duration-300 ease-in-out hover:scale-105">
