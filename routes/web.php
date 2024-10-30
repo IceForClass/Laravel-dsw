@@ -15,6 +15,8 @@ Route::get('/dashboard', [CommunityLinkController::class, 'index'])
 ->middleware(middleware: ['auth', 'verified'])
 ->name('dashboard');
 
+Route::get('dashboard/{channel:slug}',[CommunityLinkController::class, 'index']);
+
 Route::get('/contact', function () {
     return view('welcome');
 })->middleware(['auth', 'verified'])->name('contact');
