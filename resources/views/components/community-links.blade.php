@@ -17,6 +17,12 @@
                         @foreach ($links as $link)
                             <div class="bg-white dark:bg-gray-700 rounded-lg p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
                                 <h3 class="font-semibold text-lg">{{ $link->title }}</h3>
+                                
+                                <!-- Agregar número de votos -->
+                                <p class="text-sm text-gray-500 dark:text-gray-300">
+                                    {{ __('Votes: ') }} {{ $link->users()->count() }}
+                                </p>
+
                                 <a href="/dashboard/{{ $link->channel->slug }}" class="inline-block px-2 py-1 text-white text-sm font-semibold rounded hover:underline"
                                     style="background-color: {{ $link->approved ? $link->channel->color : 'orange' }};">
                                     {{ $link->approved ? $link->channel->title : __('Not Approved') }}
