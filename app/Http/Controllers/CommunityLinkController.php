@@ -19,13 +19,12 @@ class CommunityLinkController extends Controller
             //Filtrar los links por el canal
             $links = $channel->communityLinks()->latest('updated_at')->paginate(10);
             $channels = Channel::orderBy('title', 'asc')->get();
-            return view('dashboard', compact('links',  'channels'));
         } else {
             // Mostrar todos los links
             $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(10);
             $channels = Channel::orderBy('title','asc')->get();
-            return view('dashboard', compact('links',  'channels'));
         }
+        return view('dashboard', data: compact('links',  'channels'));
       }
 
       public function myLinks()
