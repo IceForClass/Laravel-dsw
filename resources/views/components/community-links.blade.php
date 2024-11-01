@@ -6,7 +6,7 @@
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 <h1 class="text-3xl font-bold mb-4">{{ __("Welcome to Your Dashboard!") }}</h1>
                 <p class="mb-6 text-gray-700 dark:text-gray-300">{{ __("Here you will see the Community Links!") }}</p>
-                
+
                 @if ($links->isEmpty())
                     <div class="bg-yellow-200 border-l-4 border-yellow-600 text-yellow-800 p-4 mb-4 dark:bg-yellow-800 dark:border-yellow-500 dark:text-yellow-200" role="alert" aria-live="polite">
                         <p class="font-bold">{{ __('No Links Available') }}</p>
@@ -18,15 +18,29 @@
                             <div class="bg-white dark:bg-gray-700 rounded-lg p-4 shadow-md transition-shadow duration-300 hover:shadow-xl">
                                 <h3 class="font-semibold text-lg">{{ $link->title }}</h3>
                                 
-                                <!-- Agregar número de votos -->
-                                <p class="text-sm text-gray-500 dark:text-gray-300">
+                                <p class="text-sm text-gray-500 dark:text-gray-300 mb-2">
                                     {{ __('Votes: ') }} {{ $link->users()->count() }}
                                 </p>
 
-                                <a href="/dashboard/{{ $link->channel->slug }}" class="inline-block px-2 py-1 text-white text-sm font-semibold rounded hover:underline"
+                                <form method="POST" action="/votes/{{ $link->id }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="px-4 py-2 rounded 
+                                        {{ Auth::check() && Auth::user()->votedFor($link) ?
+                                            'bg-green-500 hover:bg-green-600 text-white' :
+                                            'bg-gray-500 hover:bg-gray-600 text-white'
+                                        }}
+                                        disabled:opacity-50"
+                                        {{ !Auth::user()->isTrusted() ? 'disabled' : '' }}>
+                                        {{ __('Vote') }}
+                                    </button>
+                                </form>
+
+                                <a href="/dashboard/{{ $link->channel->slug }}" class="inline-block px-2 py-1 text-white text-sm font-semibold rounded hover:underline mt-2"
                                     style="background-color: {{ $link->approved ? $link->channel->color : 'orange' }};">
                                     {{ $link->approved ? $link->channel->title : __('Not Approved') }}
                                 </a>
+                                
                                 <small class="block mt-2 text-gray-600 dark:text-gray-400">
                                     {{ __('Contributed by: ') }} {{ $link->creator->name }} - {{ $link->updated_at->diffForHumans() }}
                                 </small>
