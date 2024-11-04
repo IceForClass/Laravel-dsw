@@ -25,7 +25,12 @@
                                 <form method="POST" action="/votes/{{ $link->id }}">
                                     @csrf
                                     <button type="submit"
-                                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+                                        class="px-4 py-2 rounded 
+                                        {{ Auth::check() && Auth::user()->votedFor($link) ?
+                                            'bg-green-500 hover:bg-green-600 text-white' :
+                                            'bg-gray-500 hover:bg-gray-600 text-white'
+                                        }}
+                                        disabled:opacity-50"
                                         {{ !Auth::user()->isTrusted() ? 'disabled' : '' }}>
                                         {{ __('Vote') }}
                                     </button>

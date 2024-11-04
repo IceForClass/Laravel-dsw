@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CommunityLinkController; 
+use App\Http\Controllers\CommunityLinkController;
+use App\Http\Controllers\CommunityLinkUserController ;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +26,8 @@ Route::get('/myLinks', [CommunityLinkController::class, 'myLinks'])
     ->middleware(['auth', 'verified'])
     ->name('myLinks');
 
+Route::post('/votes/{link}', [CommunityLinkUserController::class, 'store'])
+    ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
