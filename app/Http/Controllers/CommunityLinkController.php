@@ -7,26 +7,37 @@ use App\Models\CommunityLink;
 use Illuminate\Http\Request;
 use App\Models\Channel;
 use App\Http\Requests\CommunityLinkForm;
+use App\Queries\CommunityLinkQuery;
 
 class CommunityLinkController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Channel $channel = null) {
-        // dd($channel);
-        if ($channel) {
-            //Filtrar los links por el canal
-            $links = $channel->communityLinks()->latest('updated_at')->paginate(10);
-            $channels = Channel::orderBy('title', 'asc')->get();
+    public function index(Channel $channel = null)
+    {
+        if (request()->exists('popular')) {
+            if ($channel) {
+                // Obtener los enlaces más populares dentro de un mismo canal
+                $links = (new CommunityLinkQuery())->getMostPopularByChannel($channel);
+            } else {
+                // Obtener los enlaces más populares en general
+                $links = (new CommunityLinkQuery())->getMostPopular();
+            }
         } else {
-            // Mostrar todos los links
-            $links = CommunityLink::where('approved', true)->latest('updated_at')->paginate(10);
-            $channels = Channel::orderBy('title','asc')->get();
+            if ($channel) {
+                // Obtener los enlaces más recientes dentro del canal
+                $links = (new CommunityLinkQuery())->getByChannel($channel);
+            } else {
+                // Obtener los enlaces más recientes en general
+                $links = (new CommunityLinkQuery())->getAll();
+            }
         }
-        return view('dashboard', data: compact('links',  'channels'));
-      }
-
+    
+        $channels = Channel::orderBy('title', 'asc')->get();
+        return view('dashboard', compact('links', 'channels'));
+    }
+    
       public function myLinks()
       {
           $user = Auth::user();
