@@ -30,6 +30,16 @@
                 </div>
             </div>
 
+            <!-- Search Form (added) -->
+            <div class="flex items-center space-x-4">
+                <form method="GET" action="" class="flex space-x-2">
+                    <input type="text" name="search" placeholder="Search..." class="px-3 py-2 border border-gray-300 rounded-md text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600">
+                    <button type="submit" class="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600">
+                        {{ __('Search') }}
+                    </button>
+                </form>
+            </div>
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
