@@ -45,4 +45,13 @@ class CommunityLinkQuery
         return $links;
     }
 
+    public function search($term)
+    {
+        // Mostrar todos los links aprobados si no hay un canal seleccionado
+        $links = CommunityLink::where('approved', true)
+            ->latest('updated_at')
+            ->paginate(10);
+        return $links;
+    }
+
 }

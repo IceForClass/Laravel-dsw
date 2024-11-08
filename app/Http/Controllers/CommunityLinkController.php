@@ -31,8 +31,13 @@ class CommunityLinkController extends Controller
             } else {
                 // Obtener los enlaces más recientes en general
                 $links = (new CommunityLinkQuery())->getAll();
-            }
+            }  
+        if (request()->exists(key: 'search')) {
+            $term = request()->get('query');
+            $links = (new CommunityLinkQuery())->search($term); }   
         }
+
+
     
         $channels = Channel::orderBy('title', 'asc')->get();
         return view('dashboard', compact('links', 'channels'));
