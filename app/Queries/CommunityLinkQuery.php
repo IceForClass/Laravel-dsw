@@ -47,10 +47,7 @@ class CommunityLinkQuery
 
     public function search($term)
     {
-        // Mostrar todos los links aprobados si no hay un canal seleccionado
-        $links = CommunityLink::where('approved', true)
-            ->latest('updated_at')
-            ->paginate(10);
+        $links = CommunityLink::where('approved', true)->whereany('', function ($query) use ($term) {
         return $links;
     }
 
