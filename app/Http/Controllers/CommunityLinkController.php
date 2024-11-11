@@ -16,9 +16,10 @@ class CommunityLinkController extends Controller
      */
     public function index(Channel $channel = null)
     {
+        // Comprobar si se ha solicitado la búsqueda de enlaces populares o recientes
         if (request()->exists('popular')) {
             if ($channel) {
-                // Obtener los enlaces más populares dentro de un mismo canal
+                // Obtener los enlaces más populares dentro de un canal específico
                 $links = (new CommunityLinkQuery())->getMostPopularByChannel($channel);
             } else {
                 // Obtener los enlaces más populares en general
@@ -31,17 +32,24 @@ class CommunityLinkController extends Controller
             } else {
                 // Obtener los enlaces más recientes en general
                 $links = (new CommunityLinkQuery())->getAll();
-            }  
-        if (request()->exists(key: 'search')) {
-            $term = request()->get('query');
-            $links = (new CommunityLinkQuery())->search($term); }   
+            }
+    
+            // Verificar si se ha realizado una búsqueda
+            if (request()->has('search') && $term = request()->get('search')) {
+                // Obtener los enlaces basados en el término de búsqueda
+                $links = (new CommunityLinkQuery())->search($term);
+            }
         }
 
 
     
+        // Obtener los canales para la vista
         $channels = Channel::orderBy('title', 'asc')->get();
+    
+        // Retornar la vista con los enlaces y los canales
         return view('dashboard', compact('links', 'channels'));
     }
+    
     
       public function myLinks()
       {

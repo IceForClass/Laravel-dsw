@@ -47,8 +47,14 @@ class CommunityLinkQuery
 
     public function search($term)
     {
-        $links = CommunityLink::where('approved', true)->whereany('', function ($query) use ($term) {
+        $links = CommunityLink::where('approved', true)
+            ->whereAny([
+                'title',
+            ], 'like', "$term%")
+            ->orWhere('link', 'like', "$term%")
+            ->paginate(10);
+    
         return $links;
     }
-
+    
 }
