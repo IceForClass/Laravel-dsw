@@ -6,11 +6,15 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany; // Importa HasMany
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
+
+    // Cantidad de elementos por página
+    protected $perPage = 20;
 
     /**
      * The attributes that are mass assignable.
@@ -20,8 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password', // Incluye password para autenticación
         'image',
+        'trusted', // Incluye el campo 'trusted' si lo necesitas en tu proyecto
     ];
 
     /**
@@ -43,7 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password' => 'hashed', // Hash para la seguridad de la contraseña
         ];
     }
 
@@ -52,19 +57,48 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function myLinks(): HasMany
     {
-        return $this->hasMany(CommunityLink::class, 'user_id'); // Asegúrate de que 'user_id' sea el campo correcto
+        return $this->hasMany(CommunityLink::class, 'user_id'); // Confirma que 'user_id' sea correcto
     }
 
+    /**
+     * Relación para CommunityLinkUser.
+     * 
+     * Este método es de utilidad si necesitas acceder a los votos de un usuario.
+     */
+    public function communityLinkUsers(): HasMany
+    {
+        return $this->hasMany(CommunityLinkUser::class, 'user_id'); // Usa 'user_id' en lugar de 'id' si es el campo correcto
+    }
+
+    /**
+     * Relación uno a muchos con CommunityLink.
+     * 
+     * Muestra los enlaces de comunidad asociados a un usuario.
+     */
+    public function communityLinks(): HasMany
+    {
+        return $this->hasMany(CommunityLink::class, 'user_id'); // Confirma que 'user_id' sea correcto
+    }
+
+    /**
+     * Verifica si el usuario es de confianza.
+     */
     public function isTrusted()
     {
         return $this->trusted;
     }
 
-    public function votes()
+    /**
+     * Relación muchos a muchos para los votos del usuario.
+     */
+    public function votes(): BelongsToMany
     {
         return $this->belongsToMany(CommunityLink::class, 'community_link_users');
     }
 
+    /**
+     * Verifica si el usuario ha votado por un enlace específico.
+     */
     public function votedFor(CommunityLink $link)
     {
         return $this->votes->contains($link);
