@@ -6,30 +6,39 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany; // Importa HasMany
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
-    
-    protected $perPage = 20;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'image', 'password', 'trusted'];
-
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'image',
+    ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * 
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -37,22 +46,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function communityLinkUsers()
-    {
-        return $this->hasMany(\App\Models\CommunityLinkUser::class, 'id', 'user_id');
-    }
-    
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function communityLinks()
-    {
-        return $this->hasMany(\App\Models\CommunityLink::class, 'id', 'user_id');
-    }
 
-    public function mylinks()
+    /**
+     * Relación uno a muchos: Un usuario puede tener muchos CommunityLinks.
+     */
+    public function myLinks(): HasMany
     {
-        return $this->hasMany(CommunityLink::class);
+        return $this->hasMany(CommunityLink::class, 'user_id'); // Asegúrate de que 'user_id' sea el campo correcto
     }
 
     public function isTrusted()
@@ -62,12 +62,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function votes()
     {
-        return $this->belongsToMany(CommunityLink::class, "community_link_users");
+        return $this->belongsToMany(CommunityLink::class, 'community_link_users');
     }
 
     public function votedFor(CommunityLink $link)
     {
         return $this->votes->contains($link);
     }
-    
 }
