@@ -11,11 +11,6 @@
         <x-input-error class="mt-2" :messages="$errors->get('email')"/>
     </div>
     <div>
-        <x-input-label for="image" :value="__('Image')"/>
-        <x-text-input id="image" name="image" type="text" class="mt-1 block w-full" :value="old('image', $user?->image)" autocomplete="image" placeholder="Image"/>
-        <x-input-error class="mt-2" :messages="$errors->get('image')"/>
-    </div>
-    <div>
         <x-input-label for="trusted" :value="__('Trusted')"/>
         <x-text-input id="trusted" name="trusted" type="text" class="mt-1 block w-full" :value="old('trusted', $user?->trusted)" autocomplete="trusted" placeholder="Trusted"/>
         <x-input-error class="mt-2" :messages="$errors->get('trusted')"/>

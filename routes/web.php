@@ -3,7 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommunityLinkController;
-use App\Http\Controllers\CommunityLinkUserController ;
+use App\Http\Controllers\CommunityLinkUserController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('users', UserController::class)
+    ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';
             
