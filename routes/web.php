@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommunityLinkController;
 use App\Http\Controllers\CommunityLinkUserController;
+use GuzzleHttp\Middleware;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -39,5 +40,17 @@ Route::middleware('auth')->group(function () {
 Route::resource('users', UserController::class)
     ->middleware(['auth', 'verified']);
 
+
+Route::resource('users', UserController::class)->middleware('can:administrate,App\Models\User')
+->middleware('can:administrate,App\Models\User');
+
+
 require __DIR__.'/auth.php';
             
+
+
+
+Route::middleware(['auth'])->group(function () {
+
+    
+});
