@@ -6,8 +6,13 @@
             </h2>
         </nav>
     </x-slot>
-    
+
     <div class="p-6">
+
+    @if (session('token'))
+    <p>Token: {{ session('token') }}</p>
+    @endif
+    
         <x-community-add-link :channels="$channels" />
         <x-alert_user_status/>
         <x-community-links :links="$links" />
