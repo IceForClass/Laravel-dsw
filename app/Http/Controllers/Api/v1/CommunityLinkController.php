@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityLink;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CommunityLinkForm;
 
 class CommunityLinkController extends Controller
 {
@@ -33,7 +35,6 @@ class CommunityLinkController extends Controller
     }
     
     
-
     /**
      * Display the specified resource.
      */
@@ -54,9 +55,29 @@ class CommunityLinkController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CommunityLinkForm $request)
     {
-        // Implementar lógica para almacenar un nuevo enlace
+        $data = $request->validated();
+        $link = new CommunityLink($data);
+        $existing = $link->hasAlreadyBeenSubmitted();
+
+        if (!$existing) {
+            $link->user_id = Auth::id();
+            $link->approved = Auth::user()->trusted ?? false;
+            $link->save();
+            $response = [
+                'status' => 'success',
+                'message' => 'Link created',
+                'data' => $link,
+                ];
+        } else {
+            $response = [
+                'status' => 'success',
+                'message' => 'Link already submitted',
+                'data' => $link,
+                ];
+        }
+        return response()->json($response,200);
     }
 
     /**
