@@ -9,9 +9,9 @@
 
     <div class="p-6">
 
-    @if (session('token'))
+    {{-- @if (session('token'))
     <p>Token: {{ session('token') }}</p>
-    @endif
+    @endif --}}
     
         <x-community-add-link :channels="$channels" />
         <x-alert_user_status/>
